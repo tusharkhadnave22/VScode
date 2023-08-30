@@ -101,7 +101,8 @@ public class ReminderService implements IReminderService
 
       if (day == 31) {
          day = 30;
-      }
+      } 
+
 
       //boolean isMonthNumberEven =isMonthEven(month);
       // if ((month - 1) % 2 == 0) {
