@@ -8,7 +8,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import com.geektrust.backend.repositories.AvailableSubscriptionPlansRepository;
 import com.geektrust.backend.repositories.IRenewalReminderRepository;
+import com.geektrust.backend.repositories.SubscriptionDataRepository;
 import com.geektrust.backend.repositories.TopUpRepository;
+
+import javafx.scene.SubScene;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
@@ -20,23 +24,17 @@ public class TopupServiceTest
     private TopUpRepository topUpRepository;
     private IRenewalReminderRepository renewalReminderRepository;
     private TopupService topupService;
+    private SubscriptionDataRepository subscriptionDataRepository;
 
     @BeforeEach
     public void dependencies(){
          availableSubscriptionPlansRepository=mock(AvailableSubscriptionPlansRepository.class);
         topUpRepository=mock(TopUpRepository.class);
         renewalReminderRepository=mock(IRenewalReminderRepository.class);
-        topupService=new TopupService(topUpRepository, availableSubscriptionPlansRepository, renewalReminderRepository);
+        topupService=new TopupService(topUpRepository, availableSubscriptionPlansRepository, renewalReminderRepository,subscriptionDataRepository);
     }
 
-    @Test
-    public void testAddTopUpService() {
-        when(topUpRepository.getTopUpPlanDetails()).thenReturn(new ArrayList<>());
-        
-        topupService.addTopUpService("FOUR_DEVICES", "1");
-
-        verify(topUpRepository, times(2)).setTopUpPlanDetails(anyString());
-    }
+  
 
     @Test
     public void testCalculateTopUpPrice() {

@@ -12,10 +12,8 @@ import com.geektrust.backend.exceptions.NoSuchCommandException;
 public class Geektrust {
 
     public static void main(String[] args) {
-    //    String filePath=args[0];
-    //    run(filePath);
-    run("input.txt");
-    
+       String filePath=args[0];
+       run(filePath);
     }
 
     public static void run(String inputFile) {
@@ -30,7 +28,6 @@ public class Geektrust {
             while (line != null) {
                 List<String> tokens = Arrays.asList(line.split(" "));
                 commandInvoker.executeCommand(tokens.get(0), tokens);
-                // read next line
                 line = reader.readLine();
             }
             reader.close();

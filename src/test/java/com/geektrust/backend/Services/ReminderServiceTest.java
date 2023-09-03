@@ -97,7 +97,7 @@ public class ReminderServiceTest {
     }
 
     @Test 
-    @DisplayName("testDateFormater should return givern number in 01 format if 1 is passed")
+    @DisplayName("testDateFormater should return givern number in 10 format if 10 is passed")
     public void testdateFormater(){
         Assertions.assertEquals(reminderService.dateFormater(10), "10");
     }
@@ -138,7 +138,7 @@ public class ReminderServiceTest {
     public void testcalculateReminderDateEdgeCasePremiumValidity2(){
            //Arrange
            Map<String,Integer> date=new HashMap<>();
-           date.put("day",8);
+           date.put("day",10);
            date.put("month",12);
            date.put("year",2019);
            Map<String,Integer> validitymonth=new HashMap<>();
@@ -148,13 +148,23 @@ public class ReminderServiceTest {
            when(availableSubscriptionPlansRepository.getValidity_month()).thenReturn(validitymonth);
        
            //Act
-           String actualDate="27-02-2020";
+           String actualDate="29-02-2020";
            String dateExpected=reminderService.calculateReminderDate("PREMIUM", date);
            
            //Assert
             assertEquals(actualDate, dateExpected);
         
     }
+
+
+
+
+
+
+
+
+
+
 
       @Test
     @DisplayName("calculateReminderDate it shuld give date 10 days before the startdate ")
@@ -212,9 +222,9 @@ public class ReminderServiceTest {
     public void testcalculateReminderDate(){
          //Arrange
          Map<String,Integer> date=new HashMap<>();
-         date.put("day",12);
-         date.put("month",02);
-         date.put("year",2006);
+         date.put("day",8);
+         date.put("month",12);
+         date.put("year",2019);
          Map<String,Integer> validitymonth=new HashMap<>();
          validitymonth.put("FREE",1);
          validitymonth.put("PERSONAL",1);
@@ -222,8 +232,8 @@ public class ReminderServiceTest {
          when(availableSubscriptionPlansRepository.getValidity_month()).thenReturn(validitymonth);
      
          //Act
-         String actualDate="02-03-2006";
-         String dateExpected=reminderService.calculateReminderDate("PERSONAL", date);
+         String actualDate="29-12-2019";
+         String dateExpected=reminderService.calculateReminderDate("FREE", date);
          
          //Assert
           assertEquals(actualDate, dateExpected);

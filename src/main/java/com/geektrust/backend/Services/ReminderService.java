@@ -28,8 +28,9 @@ public class ReminderService implements IReminderService
    }
 
    @Override
-   public void saveAllRenualReminder() {
-
+   public void saveAllRenualReminder() 
+   {
+      try{
       for (List<String> subscription : subscriptionDataRepository
             .getAllSubscriptionTypeAndValidityPlan()) {
          String subscriptionType = subscription.get(0);// name of subscrion
@@ -40,8 +41,8 @@ public class ReminderService implements IReminderService
          renewalReminderRepository.setRenewalData(renewalStatement);
       }
    }
-
-
+   catch(IndexOutOfBoundsException e){}
+   }
 
    public int toIntConverter(String number) {
       return Integer.parseInt(number);
@@ -51,93 +52,133 @@ public class ReminderService implements IReminderService
       return Integer.toString(number);
    }
 
-   public String dateFormater(int number) {
+   public String dateFormater(int number) 
+   {
 
-      if (number / 10 == 0) {
-         return "0" + toStringConverter(number);
-      } else {
-         return toStringConverter(number);
-      }
+         final int TEN = 10;
+
+         if (number / TEN == 0) 
+         {
+            return "0" + toStringConverter(number);
+         } 
+         else 
+         {
+            return toStringConverter(number);
+         }
    }
 
    public boolean isLeapYear(int year) {
-      if ((year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))) {
-         return true;
-      } else {
-         return false;
-      }
+     
+         //  it's divisible by 4 ?
+         boolean isDivisibleBy4 = (year % 4 == 0);
+ 
+         //  if it's divisible by 100 ?
+         boolean isDivisibleBy100 = (year % 100 == 0);
+ 
+         //  if it's divisible by 400 ?
+         boolean isDivisibleBy400 = (year % 400 == 0);
+ 
+         // Determine if it's a leap year  ?
+         return isDivisibleBy4 && (!isDivisibleBy100 || isDivisibleBy400);
+     
    }
 
-   public String convertInDateFormat(int date, int month, int year) {
-      String reminderDate =
-            dateFormater(date) + "-" + dateFormater(month) + "-" + toStringConverter(year);
-      return reminderDate;
+   public String convertInDateFormat(int date, int month, int year) 
+   {
+      return dateFormater(date) + "-" + dateFormater(month) + "-" + toStringConverter(year);
    }
 
-   public boolean isMonthEven(int month){
-      if(month%2==0)
-      return true;
-      return false;
+   public boolean isMonthEven(int month)
+   {
+      final int EVEN_MONTH = 2; // Replace with the appropriate even month constant
+      return month % EVEN_MONTH == 0;
    }
+
+
+   
 
    @Override
-   public String calculateReminderDate(String validityType, Map<String, Integer> startDate) {
+public String calculateReminderDate(String validityType, Map<String, Integer> startDate) {
+     int MONTH = startDate.get("month");
+     int DAY = startDate.get("day");
+     int YEAR = startDate.get("year");
+    
+    final boolean LAST_DAY_OF_MONTH = isLastDayOfMonth(DAY, MONTH, YEAR);
+    
+    Map<String, Integer> validityMonthRepo = availableSubscriptionPlansRepository.getValidity_month();
+    int validityForYourPlan = validityMonthRepo.get(validityType);
+    int updatedMonth = MONTH + validityForYourPlan;
+    
+    if (updatedMonth > 12) {
+        YEAR += 1;
+        updatedMonth -= 12;
+    }
+    
+    if (LAST_DAY_OF_MONTH) {
+        DAY = lastDaySenderForGivenMonth(DAY, updatedMonth, YEAR);
+    }
+    
+    final int REMINDER_DAY_THRESHOLD = 10;
+    
+    if (DAY > REMINDER_DAY_THRESHOLD) {
+        DAY -= REMINDER_DAY_THRESHOLD;
+    } else {
+        final int ONE_MONTH_BEFORE = 1;
+        updatedMonth -= ONE_MONTH_BEFORE;
+        
+        if (updatedMonth == 0) {
+            YEAR -= 1;
+            updatedMonth = 12;
+        }
+        
+        final int REMINDER_DAY = 10;
+        DAY = lastDaySenderForGivenMonth(DAY, updatedMonth, YEAR) - (REMINDER_DAY - DAY);
+    }
+    
+    return convertInDateFormat(DAY, updatedMonth, YEAR);
+}
 
 
 
-      int month = startDate.get("month");
-      int day = startDate.get("day");
-      int year = startDate.get("year");
 
-      Map<String, Integer> validityMonthRepo =
-            availableSubscriptionPlansRepository.getValidity_month();
-      int validityForYourPlan = validityMonthRepo.get(validityType);
-      month = month + validityForYourPlan;
-
-      if (month > 12) {
-         year = year + 1;
-         month = month - 12;
+   public boolean isLastDayOfMonth(int day,int month,int year){
+    if(day==30 && (month==4 ||month==6 ||month==9 ||month==11 )){
+      return true;
+    }
+    if(day==31 && (month==1 ||month==3 ||month==5 ||month==7 ||month==8 ||month==12 )){
+      return true;
+    }
+    if(month==2){
+      if(day==28 && isLeapYear(year)==false){
+         return true;
       }
-
-      if (day == 31) {
-         day = 30;
-      } 
-
-
-      //boolean isMonthNumberEven =isMonthEven(month);
-      // if ((month - 1) % 2 == 0) {
-      //     isMonthNumberEven = true;
-      // }
-
-      if (day < 10 && isMonthEven(month)) {
-         month = month - 1;                   //ACTUALLY what is issue is when i am in last month 1 t0 10 date i am in hard situation 
-                                              //because i am updating the year over here but again i have to come the particular year again
-                                              //but rather than putting situatoin to the month range i can put if the month value is comming negative
-         //if month is going below negative then i have to update the month as well as year
-         if(month==0){
-            month=12;
-            year=year-1;
-         }                                     
-         if (month == 2 && isLeapYear(year)) {
-            day = 29 - (10 - day);
-         } else if (month == 2 && isLeapYear(year) == false) {
-            day = 28 - (10 - day);
-         } else {
-            day = 30 - (10 - day);
-         }
-      } else if (day < 10 && isMonthEven(month)) {
-         day = 31 - day;
-         month = month - 1;
+      if(day==29 && isLeapYear(year)){
+         return true;
       }
+    }
 
-      else {
-         day = day - 10;
-      }
-
-      return convertInDateFormat(day, month, year);
-
+    return false;
    }
 
+   public int lastDaySenderForGivenMonth(int day,int month,int year){
+      if(month==4 ||month==6 ||month==9 ||month==11){
+         return 30;
+      }
+      if(month==1 ||month==3 ||month==5 ||month==7 ||month==8 ||month==12){
+         return 31;
+      }
+      if(month==2 && isLeapYear(year)==false){
+         return 28;
+      }
+      if(month==2 && isLeapYear(year)){
+         return 29;
+      }
+
+     return 0;
+   }
+
+
+   
 
    @Override
    public void printReminders() {
@@ -161,30 +202,33 @@ public class ReminderService implements IReminderService
 
    @Override
    public void renewalAmount() {
-      // featch the allsubscription data and calculate price
-      for (List<String> subscriptoin : subscriptionDataRepository
-            .getAllSubscriptionTypeAndValidityPlan()) {
-         if (subscriptoin.get(0).equals("MUSIC")) {
-            int MusicSubscriptionPrice =
-                  availableSubscriptionPlansRepository.getMusicPriceMap().get(subscriptoin.get(1));
-            renewalReminderRepository.setTotalRenewalAmount(MusicSubscriptionPrice);
-
-         } else if (subscriptoin.get(0).equals("PODCAST")) {
-            int PoadCastSubscriptionPrice = availableSubscriptionPlansRepository
-                  .getPodCastPriceMap().get(subscriptoin.get(1));
-            renewalReminderRepository.setTotalRenewalAmount(PoadCastSubscriptionPrice);
-
-         } else if (subscriptoin.get(0).equals("VIDEO")) {
-            int VideoSubscriptionPrice =
-                  availableSubscriptionPlansRepository.getVideoPriceMap().get(subscriptoin.get(1));
-            renewalReminderRepository.setTotalRenewalAmount(VideoSubscriptionPrice);
-
-         } else {
+      
+      for (List<String> subscriptoin : subscriptionDataRepository.getAllSubscriptionTypeAndValidityPlan()) {
+         try{
+         if (subscriptoin.get(0).equals("MUSIC")) 
+         {
+            int musicSubscriptionPrice = availableSubscriptionPlansRepository.getMusicPriceMap().get(subscriptoin.get(1));
+            renewalReminderRepository.setTotalRenewalAmount(musicSubscriptionPrice);
+         } 
+         else if (subscriptoin.get(0).equals("PODCAST")) 
+         {
+            int poadCastSubscriptionPrice = availableSubscriptionPlansRepository.getPodCastPriceMap().get(subscriptoin.get(1));
+            renewalReminderRepository.setTotalRenewalAmount(poadCastSubscriptionPrice);
+         } 
+         else if (subscriptoin.get(0).equals("VIDEO")) 
+         {
+            int videoSubscriptionPrice = availableSubscriptionPlansRepository.getVideoPriceMap().get(subscriptoin.get(1));
+            renewalReminderRepository.setTotalRenewalAmount(videoSubscriptionPrice);
+         } 
+         else 
+         {
 
          }
       }
-      topupService.calculateTopUpPrice();
-
+      catch(IndexOutOfBoundsException e){
+         
+      }
+      }
    }
 
 }

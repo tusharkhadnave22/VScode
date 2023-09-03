@@ -2,6 +2,7 @@ package com.geektrust.backend.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.geektrust.backend.exceptions.InvalidSubscirptionValidityException;
 import com.geektrust.backend.exceptions.InvalidSubscriptionPlanException;
@@ -9,7 +10,7 @@ import com.geektrust.backend.repositories.AvailableSubscriptionPlansRepository;
 import com.geektrust.backend.repositories.SubscriptionDataRepository;
 
 public class SubscriptionService implements ISubscriptionService {
-
+   private AvailableSubscriptionPlansRepository availableSubscriptionPlansRepository;
    private SubscriptionDataRepository subscriptionDataRepository;
    private List<String> individualSubscriptionPlanData;
    private IReminderService reminderService;
@@ -18,9 +19,12 @@ public class SubscriptionService implements ISubscriptionService {
          AvailableSubscriptionPlansRepository availableSubscriptionPlansRepository,
          IReminderService reminderService) {
       this.subscriptionDataRepository = subscriptionDataRepository;
+      this.availableSubscriptionPlansRepository=availableSubscriptionPlansRepository;
       this.reminderService = reminderService;
    }
+   public SubscriptionService(){
 
+   }
 
    @Override
    public void addSubscription(String subscriptionType, String subscriptionValidity) throws InvalidSubscriptionPlanException {
@@ -34,8 +38,7 @@ public class SubscriptionService implements ISubscriptionService {
          throw new InvalidSubscirptionValidityException("Cannot add Subscription validity type. Please select Subscription validity type of PERSONAL/PRIMIUM/FREE type");
       }
       
-      List<String> individualSubscription =
-      setIndividualSubscriptionPlanData(subscriptionType, subscriptionValidity);
+      List<String> individualSubscription =setIndividualSubscriptionPlanData(subscriptionType, subscriptionValidity);
       subscriptionDataRepository.setAllSubscriptionTypeAndValidityPlan(individualSubscription);
      
    }
@@ -65,31 +68,48 @@ public class SubscriptionService implements ISubscriptionService {
       int month = reminderService.toIntConverter(StartDate[1]);
       int day = reminderService.toIntConverter(StartDate[0]);
       int year = reminderService.toIntConverter(StartDate[2]);
-      // yearValidator(year);
-      // monthValidator(month);
-      // dayValidator(day, year, month);
-      if (yearValidator(year) == false || monthValidator(month) == false
-            || dayValidator(day, year, month) == false) {
-         System.out.println("ADD_SUBSCRIPTION_FAILD INVALID_DATE");
-         System.exit(0);
-      }
 
-      subscriptionDataRepository.setStartDate(day, month, year);
-      // availableSubscriptionPlansRepository.setPrices();
+     subscriptionDataRepository.setStartDate(day, month, year);
+
+      if(dateValidator(day, month, year)==false){
+         System.out.println("INVALID_DATE");  
+      }
+      
+      
+   }
+   
+   public boolean dateValidator(int day,int month,int year)
+   {  
+      
+      if (yearValidator(year) == false || monthValidator(month) == false|| dayValidator(day, year, month) == false) 
+      {
+         return false;
+      }
+         return true;
    }
 
-   public List<String> setIndividualSubscriptionPlanData(String subscriptionType,
-         String subscriptionValidity) {
-      for (List<String> subscription : subscriptionDataRepository
-            .getAllSubscriptionTypeAndValidityPlan()) {
-         if (subscription.get(0).equals(subscriptionType)) {
-            System.out.println("ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGOTY");
-            System.exit(0);
-         }
-      }
+
+   public List<String> setIndividualSubscriptionPlanData(String subscriptionType,String subscriptionValidity) 
+   {   
       individualSubscriptionPlanData = new ArrayList<>();
       individualSubscriptionPlanData.add(subscriptionType);
       individualSubscriptionPlanData.add(subscriptionValidity);
+      
+      if(subscriptionDataRepository.dateValidatorWithoutInput())
+         {
+         System.out.println("ADD_SUBSCRIPTION_FAILED INVALID_DATE");
+         return new ArrayList<>();
+         }
+      
+      for (List<String> subscription : subscriptionDataRepository.getAllSubscriptionTypeAndValidityPlan()) 
+      {  
+         if (subscription.get(0).equals(subscriptionType)) 
+         {
+            System.out.println("ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY");
+            return new ArrayList<>();
+         }
+      }
+
       return individualSubscriptionPlanData;
    }
 
@@ -99,7 +119,8 @@ public class SubscriptionService implements ISubscriptionService {
       if (year < 0) {
 
          return false;
-      } else {
+      } 
+      else {
          return true;
       }
 
@@ -137,14 +158,14 @@ public class SubscriptionService implements ISubscriptionService {
          }
       }
 
-      else if (reminderService.isLeapYear(year) && month == 2) {
+      else if (checkIfLeapYear(year) && month == 2) {
          if (day > 29) {
 
             return false;
          } else {
             return true;
          }
-      } else if (reminderService.isLeapYear(year) == false && month == 2) {
+      } else if (checkIfLeapYear(year) == false && month == 2) {
          if (day > 28) {
 
             return false;
@@ -155,7 +176,9 @@ public class SubscriptionService implements ISubscriptionService {
       return true;
 
    }
-
-
+   public boolean checkIfLeapYear(int year){
+      return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+   }
 
 }
+

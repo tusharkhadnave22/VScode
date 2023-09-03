@@ -25,7 +25,7 @@ public class applicatoinConfig {
     private final TopUpRepository topUpRepository=new TopUpRepository();
     private final AvailableSubscriptionPlansRepository availableSubscriptionPlansRepository=new AvailableSubscriptionPlansRepository();
     
-    private final ITopupService topupService = new TopupService(topUpRepository,availableSubscriptionPlansRepository,renewalReminderRepository);
+    private final ITopupService topupService = new TopupService(topUpRepository,availableSubscriptionPlansRepository,renewalReminderRepository,subscriptionDataRepository);
 
     private final IReminderService reminderService = new ReminderService(subscriptionDataRepository,renewalReminderRepository,availableSubscriptionPlansRepository,topupService);
     private final ISubscriptionService subscriptionService = new SubscriptionService(subscriptionDataRepository,availableSubscriptionPlansRepository,reminderService);

@@ -17,7 +17,9 @@ public class TopUpRepository {
     public void setTopUpPlanDetails(String TopUpDetails) {
         topUpPlanDetails.add(TopUpDetails);
     }
-
+    public void removeTopUpEntry(int index){
+        topUpPlanDetails.remove(index);
+    }
 
     
     
