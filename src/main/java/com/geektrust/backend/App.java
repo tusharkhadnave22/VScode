@@ -9,7 +9,7 @@ import com.geektrust.backend.appConfig.applicatoinConfig;
 import com.geektrust.backend.commands.CommandInvoker;
 import com.geektrust.backend.exceptions.NoSuchCommandException;
 
-public class Geektrust {
+public class App {
 
     public static void main(String[] args) {
        String filePath=args[0];

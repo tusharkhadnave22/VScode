@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.geektrust.backend.Services.ReminderServiceTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2023-09-03T13:52:07" hostname="Tushar" time="1.767">
+<testsuite name="com.geektrust.backend.Services.ReminderServiceTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2023-09-04T09:51:35" hostname="Tushar" time="2.022">
   <properties/>
-  <testcase name="testcalculateReminderDateEdgeCaseEndOfYear()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="1.68"/>
-  <testcase name="testcalculateReminderDateEdgeCasePremiumValidity()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
-  <testcase name="testcalculateReminderDate()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.005"/>
-  <testcase name="test2004isLeapYear()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
-  <testcase name="testcalculateReminderDateForPremiumPlan()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
-  <testcase name="testToIntConverter()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.002"/>
-  <testcase name="testConvertInDateFormat()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
+  <testcase name="testcalculateReminderDateEdgeCaseEndOfYear()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="1.925"/>
+  <testcase name="testcalculateReminderDateEdgeCasePremiumValidity()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.006"/>
+  <testcase name="testcalculateReminderDate()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.008"/>
+  <testcase name="test2004isLeapYear()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
+  <testcase name="testcalculateReminderDateForPremiumPlan()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.01"/>
+  <testcase name="testToIntConverter()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
+  <testcase name="testConvertInDateFormat()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.002"/>
   <testcase name="testcalculateReminderDateEdgeCase()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.006"/>
   <testcase name="testdateFormaterEdgeCase()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
-  <testcase name="testdateFormater()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
-  <testcase name="testDateformater()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.005"/>
+  <testcase name="testdateFormater()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.002"/>
+  <testcase name="testDateformater()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.002"/>
   <testcase name="test2003isLeapYear()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
-  <testcase name="testToStringConverter()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
+  <testcase name="testToStringConverter()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
   <testcase name="testcalculateReminderDateEdgeCaseEndOfYear2()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.005"/>
   <testcase name="testcalculateReminderDateEdgeCasePremiumValidity2()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
-  <testcase name="testcalculateReminderDateEdgeCasePremiumValidity3()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.004"/>
-  <testcase name="testcalculateReminderDateForPersonalPlan()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.003"/>
+  <testcase name="testcalculateReminderDateEdgeCasePremiumValidity3()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.005"/>
+  <testcase name="testcalculateReminderDateForPersonalPlan()" classname="com.geektrust.backend.Services.ReminderServiceTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

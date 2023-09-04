@@ -139,28 +139,37 @@ public String calculateReminderDate(String validityType, Map<String, Integer> st
 }
 
 
-
+  
 
    public boolean isLastDayOfMonth(int day,int month,int year){
-    if(day==30 && (month==4 ||month==6 ||month==9 ||month==11 )){
+      /**
+       * Months which are compared with this particular numbers are the months in the year
+       * day which is compared with the constant 30 and 31 are the days in particular month
+       */
+      if(day==30 && (month==4 ||month==6 ||month==9 ||month==11 )){
       return true;
-    }
-    if(day==31 && (month==1 ||month==3 ||month==5 ||month==7 ||month==8 ||month==12 )){
+      }
+      if(day==31 && (month==1 ||month==3 ||month==5 ||month==7 ||month==8 ||month==12 )){
       return true;
-    }
-    if(month==2){
-      if(day==28 && isLeapYear(year)==false){
-         return true;
       }
-      if(day==29 && isLeapYear(year)){
-         return true;
+      /**
+       * day which are compared are for confirming the given month lies in leap year or not
+       */
+      if(month==2){
+         if(day==28 && isLeapYear(year)==false){
+            return true;
+         }
+         if(day==29 && isLeapYear(year)){
+            return true;
+         }
       }
-    }
-
-    return false;
+      return false;
    }
 
    public int lastDaySenderForGivenMonth(int day,int month,int year){
+      /**
+       * months which are compared with this particular numbers are the months in the year
+       */
       if(month==4 ||month==6 ||month==9 ||month==11){
          return 30;
       }
@@ -181,9 +190,11 @@ public String calculateReminderDate(String validityType, Map<String, Integer> st
    
 
    @Override
-   public void printReminders() {
+   public void printReminders() 
+   {
       saveAllRenualReminder();
-      if (renewalReminderRepository.getRenewalData().size() == 0) {
+      final int NO_SUBSCRIPTIONS_FOUND = 0;
+      if (renewalReminderRepository.getRenewalData().size() == NO_SUBSCRIPTIONS_FOUND) {
          System.out.println("SUBSCRIPTIONS_NOT_FOUND");
          System.exit(0);
       }
@@ -205,6 +216,11 @@ public String calculateReminderDate(String validityType, Map<String, Integer> st
       
       for (List<String> subscriptoin : subscriptionDataRepository.getAllSubscriptionTypeAndValidityPlan()) {
          try{
+            /**
+             * We are iterating through the list of list the input subscription
+             * At Index 0 we have inserted subscrition type
+             * At index 1 we have inserted the validity of subscription
+             */
          if (subscriptoin.get(0).equals("MUSIC")) 
          {
             int musicSubscriptionPrice = availableSubscriptionPlansRepository.getMusicPriceMap().get(subscriptoin.get(1));
@@ -222,11 +238,9 @@ public String calculateReminderDate(String validityType, Map<String, Integer> st
          } 
          else 
          {
-
          }
       }
       catch(IndexOutOfBoundsException e){
-         
       }
       }
    }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("App Test")
-class GeektrustTest {
+class AppTest {
 
     @Test
     public void Application_Test() throws Exception{

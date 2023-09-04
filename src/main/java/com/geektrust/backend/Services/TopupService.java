@@ -37,9 +37,6 @@ public class TopupService implements ITopupService {
             topUpRespository.removeTopUpEntry(indexToDelete);
             return;
         }
-          
-          
-
         calculateTopUpPrice();
     }
 

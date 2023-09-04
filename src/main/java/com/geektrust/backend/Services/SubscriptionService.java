@@ -1,8 +1,11 @@
 package com.geektrust.backend.Services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.geektrust.backend.exceptions.InvalidSubscirptionValidityException;
 import com.geektrust.backend.exceptions.InvalidSubscriptionPlanException;
@@ -43,23 +46,30 @@ public class SubscriptionService implements ISubscriptionService {
      
    }
 
-   public boolean doWeHaveThisSubscription(String subscriptionType)
-   {
-      if(subscriptionType.equals("MUSIC") || subscriptionType.equals("PODCAST") || subscriptionType.equals("VIDEO"))
-      {
-         return true;
-      }
-      return false;
-   }
-    public boolean doWeHaveThisSubscriptionValidity(String subscriptionValidity)
-   {
-      if(subscriptionValidity.equals("FREE") || subscriptionValidity.equals("PERSONAL") || subscriptionValidity.equals("PREMIUM"))
-      {
-         return true;
-      }
-      return false;
-   }
-
+   // public boolean doWeHaveThisSubscription(String subscriptionType)
+   // {
+   //    if(subscriptionType.equals("MUSIC") || subscriptionType.equals("PODCAST") || subscriptionType.equals("VIDEO"))
+   //    {
+   //       return true;
+   //    }
+   //    return false;
+   // }
+   public boolean doWeHaveThisSubscription(String subscriptionType) {
+    Set<String> validSubscriptionTypes = new HashSet<>(Arrays.asList("MUSIC", "PODCAST", "VIDEO"));
+    return validSubscriptionTypes.contains(subscriptionType);
+}
+   //  public boolean doWeHaveThisSubscriptionValidity(String subscriptionValidity)
+   // {
+   //    if(subscriptionValidity.equals("FREE") || subscriptionValidity.equals("PERSONAL") || subscriptionValidity.equals("PREMIUM"))
+   //    {
+   //       return true;
+   //    }
+   //    return false;
+   // }
+   public boolean doWeHaveThisSubscriptionValidity(String subscriptionValidity) {
+      Set<String> validSubscriptionValidities = new HashSet<>(Arrays.asList("FREE", "PERSONAL", "PREMIUM"));
+      return validSubscriptionValidities.contains(subscriptionValidity);
+  }
    @Override
    public void startSubscription(String date) {
 
@@ -115,68 +125,61 @@ public class SubscriptionService implements ISubscriptionService {
 
 
 
+   // public boolean yearValidator(int year) {
+   //    if (year < 0) {
+
+   //       return false;
+   //    } 
+   //    else {
+   //       return true;
+   //    }
+
+   // }
    public boolean yearValidator(int year) {
-      if (year < 0) {
+      return year >= 0;
+  }
+  
+   // public boolean monthValidator(int month) {
+   //    if (month > 12 || month < 1) {
 
-         return false;
-      } 
-      else {
-         return true;
-      }
-
-   }
-
+   //       return false;
+   //    } else {
+   //       return true;
+   //    }
+   // }
    public boolean monthValidator(int month) {
-      if (month > 12 || month < 1) {
-
-         return false;
-      } else {
-         return true;
-      }
-   }
+      return month >= 1 && month <= 12;
+  }
+  
 
    public boolean dayValidator(int day, int year, int month) {
-      if (day < 1) 
-      {
-         return false;
-      } 
-      else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10
-            || month == 12) {
-         if (day > 31) {
-
-            return false;
-         } else {
-            return true;
-         }
-      } 
-      else if (month == 4 || month == 6 || month == 9 || month == 11 || month == 12) {
-         if (day > 30) {
-
-            return false;
-         } else {
-            return true;
-         }
+      if (day < 1) {
+          return false;
       }
-
-      else if (checkIfLeapYear(year) && month == 2) {
-         if (day > 29) {
-
-            return false;
-         } else {
-            return true;
-         }
-      } else if (checkIfLeapYear(year) == false && month == 2) {
-         if (day > 28) {
-
-            return false;
-         } else {
-            return true;
-         }
+  
+      switch (month) {
+          case 4:
+          case 6:
+          case 9:
+          case 11:
+              return day <= 30;
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+              return day <= 31;
+          case 2:
+              return (checkIfLeapYear(year) && day <= 29) || (!checkIfLeapYear(year) && day <= 28);
+          default:
+              return false;
       }
-      return true;
-
-   }
+  }
+  
    public boolean checkIfLeapYear(int year){
+      // Leap years are divisible by 4, except for years divisible by 100 but not by 400.
       return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
    }
 
